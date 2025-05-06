@@ -1,0 +1,63 @@
+Chinook Data Warehouse Project
+Contributor: Novikov Pavel 
+
+1. Database Initialization
+The Chinook database was deployed in a PostgreSQL cloud environment using a provided dump file. Core entities—such as playlists, tracks, artists, customers, employees, albums, media types, and genres—were successfully imported. Supabase served as the hosting platform, and schema extraction was performed through SQL tooling.
+
+2. Department Budget Table Construction
+Using Python and Pandas, we built a department_budget table by integrating three external files:
+•	A delimiter-separated file containing department IDs and names.
+•	Two JSON files listing sub-departments and budgets.
+One JSON file contained syntax errors and was validated and corrected using JSONLint. The files were merged, joined on department_id, and the total department budget was calculated. The resulting dataset was loaded into the public schema.
+
+3. Currency Exchange Data Integration
+We developed a Python script that fetched historical USD/ILS exchange rates via an API. Using tqdm, we added a progress bar to monitor requests. The data was compiled into a DataFrame, merged with invoice dates, and stored in the usd_ils_exchange_rates table within PostgreSQL.
+
+4. Data Warehouse (DWH) Schema Design
+We introduced a new dwh schema to host transformed dimensional and fact tables, optimizing the structure for analytical workloads.
+Dimension Tables
+•	dim_playlist: Enriched playlist tracking data by joining playlisttrack and playlist, appending playlist names and ensuring data consistency.
+•	dim_customer: Enhanced with standardized name casing and a derived email_domain field.
+•	dim_employee: Augmented with department info from department_budget, computed seniority_in_years, and flagged managers via hierarchy analysis.
+•	dim_track: Combined metadata from track, album, artist, genre, and mediatype. Included a formatted duration field (MM:SS).
+•	dim_currency: Static reference of USD/ILS exchange rates for invoice normalization.
+Fact Tables
+•	fact_invoice: Excluded redundant address fields and normalized foreign keys to maintain referential integrity.
+•	fact_invoiceline: Introduced a line_total metric using window functions for revenue aggregation.
+
+5. SQL-Based Analytical Workflows
+5.1 Playlist Track Distribution
+Computed maximum, minimum, and average track counts per playlist using window functions.
+5.2 Track Sales Categorization
+Grouped tracks by purchase frequency, enabling demand tier analysis (e.g., 0, 1–5, 6–10, >10 sales).
+5.3 Revenue by Country and Genre
+•	Identified top 5 revenue-generating countries.
+•	Computed genre-wise revenue distribution within these countries.
+5.4 Customer Segmentation by Region
+Segmented customers based on invoice frequency and spending, classifying them into ‘Other’, ‘Developing’, and ‘Good’ tiers.
+5.5 Employee Yearly Performance
+Measured sales and customer counts per employee by year, applying window functions to calculate YoY growth.
+
+6. Python-Based Analysis
+6.1 Visual Summary of Top Entities
+Created multi-panel bar charts showing:
+•	Top 5 artists by albums and tracks.
+•	Top 5 genres by track count.
+6.2 Top-Spending Customers
+Ranked customers by total spend in both USD and ILS, visualized via grouped bar charts.
+6.3 Monthly Revenue Trends
+Generated line/bar charts comparing monthly revenue across years.
+6.4 Duration vs. Revenue Correlation
+Produced a scatter plot to assess correlation between track duration and revenue. Result: No significant correlation observed.
+6.5 Song Recommendation Engine
+Recommended unpurchased tracks from a customer’s favorite genres, based on popularity and genre affinity.
+
+7. Custom Analytical Insights
+7.1 Customer Retention Analysis
+Calculated annual retention rates by identifying customers active in consecutive years.
+7.2 Artist Profitability Summary
+Summarized artist revenue, track volume, average revenue per track, most frequent genre, and media type.
+
+Conclusion
+This project offered hands-on experience in data engineering, analytical modeling, and visualization. It strengthened our ability to handle complex datasets and design scalable analytical solutions using both SQL and Python.
+
