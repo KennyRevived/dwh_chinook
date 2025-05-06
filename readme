@@ -6,6 +6,19 @@ where we performed schema extraction, transformation, and enrichment using SQL a
 integrated external data such as currency exchange rates and departmental budgets, and implemented various business intelligence queries to uncover insights about customers, sales, employee performance, and content trends. 
 The project also included advanced visualizations and a basic recommendation engine, showcasing both engineering rigor and data storytelling capabilities.
 
+ZIP Contains:
+project_initial_files - a folder that contains an sql dump before ETL, it also includes:
+raw-department.txt - a csv needed for a transformation and a merge with jsons for later merging a deparment_budget table
+raw-department-budget.txt/raw-department-budget2.txt are jsons to be merges with a csv in Pandas 
+
+project files for output:
+chinook_project_python.ipynb - Python in Colabs for proper data preparation and connection to Supabase by SQLAlchemy, contains API exraction of historical exchange rates for invoice dates nad later analysis 
+dwh.txt - Schema transforming the initial data
+dwh_schema_script.sql - same as a script
+sql_analysis.txt - main analyis 
+supabase_connection_parameters.txt - self-explainatory
+
+
 1. Database Initialization
 The Chinook database was deployed in a PostgreSQL cloud environment using a provided dump file. Core entities—such as playlists, tracks, artists, customers, employees, albums, media types, and genres—were successfully imported. 
 Supabase served as the hosting platform, and schema extraction was performed through SQL tooling.
